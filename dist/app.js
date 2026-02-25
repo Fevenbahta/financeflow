@@ -1,0 +1,25 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const user_routes_1 = __importDefault(require("./modules/user/user.routes"));
+const account_route_1 = __importDefault(require("./modules/account/account.route"));
+const transaction_route_1 = __importDefault(require("./modules/transaction/transaction.route"));
+const goal_route_1 = __importDefault(require("./modules/goal/goal.route"));
+const budget_route_1 = __importDefault(require("./modules/budget/budget.route"));
+const notification_route_1 = __importDefault(require("./modules/notification/notification.route"));
+const ai_route_1 = __importDefault(require("./modules/ai/ai.route"));
+const app = (0, express_1.default)();
+app.use((0, cors_1.default)());
+app.use(express_1.default.json());
+app.use("/api/ai", ai_route_1.default);
+app.use("/api/users", user_routes_1.default);
+app.use("/api/accounts", account_route_1.default);
+app.use("/api/transactions", transaction_route_1.default);
+app.use("/api/goals", goal_route_1.default);
+app.use("/api/budgets", budget_route_1.default);
+app.use("/api/notifications", notification_route_1.default);
+exports.default = app;
