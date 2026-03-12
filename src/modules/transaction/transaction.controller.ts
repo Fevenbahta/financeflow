@@ -1,12 +1,23 @@
 import { Request, Response } from "express";
 import { TransactionService } from "./transaction.service";
+import { validate, transactionSchema } from "../../middleware/validation.middleware";
 
 const service = new TransactionService();
 
 export const createTransaction = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).userId;
-    const transaction = await service.createTransaction({ ...req.body, userId });
+    
+    // Manual validation for complex cases
+    if (!req.body.accountId) {
+      return res.status(400).json({ message: "Account ID is required" });
+    }
+    
+    const transaction = await service.createTransaction({ 
+      ...req.body, 
+      userId,
+      transactionDate: req.body.transactionDate ? new Date(req.body.transactionDate) : new Date()
+    });
     res.status(201).json(transaction);
   } catch (error: any) {
     res.status(400).json({ message: error.message });

@@ -6,7 +6,15 @@ const service = new transaction_service_1.TransactionService();
 const createTransaction = async (req, res) => {
     try {
         const userId = req.userId;
-        const transaction = await service.createTransaction({ ...req.body, userId });
+        // Manual validation for complex cases
+        if (!req.body.accountId) {
+            return res.status(400).json({ message: "Account ID is required" });
+        }
+        const transaction = await service.createTransaction({
+            ...req.body,
+            userId,
+            transactionDate: req.body.transactionDate ? new Date(req.body.transactionDate) : new Date()
+        });
         res.status(201).json(transaction);
     }
     catch (error) {

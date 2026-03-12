@@ -6,20 +6,13 @@ import {
   updateTransaction,
 } from "./transaction.controller";
 import { authenticate } from "../../middleware/auth.middleware";
+import { validate, transactionSchema } from "../../middleware/validation.middleware";
 
 const router = Router();
 
-// Create a new transaction
-router.post("/",  authenticate, createTransaction);
-
-// Get all transactions for a user
-// Example URL: /transactions/user/123
+router.post("/", authenticate, validate(transactionSchema), createTransaction);
 router.get("/user/:userId", authenticate, getTransactions);
-
-// Delete a transaction by ID
-// Example URL: /transactions/123
 router.delete("/:id", authenticate, deleteTransaction);
-// Update a transaction by ID
-// Example URL: /transactions/123
-router.put("/:id", authenticate, updateTransaction);
+router.put("/:id", authenticate, validate(transactionSchema.partial()), updateTransaction);
+
 export default router;

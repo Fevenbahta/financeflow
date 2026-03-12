@@ -33,16 +33,15 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-// routes/budget.routes.ts
 const express_1 = require("express");
 const controller = __importStar(require("./budget.controller"));
 const auth_middleware_1 = require("../../middleware/auth.middleware");
+const validation_middleware_1 = require("../../middleware/validation.middleware");
 const router = (0, express_1.Router)();
-router.post("/", auth_middleware_1.authenticate, controller.createBudget);
+router.post("/", auth_middleware_1.authenticate, (0, validation_middleware_1.validate)(validation_middleware_1.budgetSchema), controller.createBudget);
 router.get("/", auth_middleware_1.authenticate, controller.getBudgets);
-router.get("/user/:userId", auth_middleware_1.authenticate, controller.getBudgets);
 router.get("/analyze", auth_middleware_1.authenticate, controller.analyze);
-router.post("/check-purchase", auth_middleware_1.authenticate, controller.checkPurchase);
-router.delete("/:id", auth_middleware_1.authenticate, controller.deleteBudget); // Add this line
-router.put("/:id", auth_middleware_1.authenticate, controller.updateBudget); // Add this line
+router.post("/check-purchase", auth_middleware_1.authenticate, (0, validation_middleware_1.validate)(validation_middleware_1.purchaseCheckSchema), controller.checkPurchase);
+router.put("/:id", auth_middleware_1.authenticate, (0, validation_middleware_1.validate)(validation_middleware_1.budgetSchema.pick({ percentage: true })), controller.updateBudget);
+router.delete("/:id", auth_middleware_1.authenticate, controller.deleteBudget);
 exports.default = router;
